@@ -6,15 +6,21 @@ import yelp from '../api/yelp';
 const SearchScreen = () => {
   const [search, setSearch] = useState('');
   const [results, setResults] = useState([]);
+  const [errorMessage, setErrorMessage] = useState('');
   const searchApi = async () => {
-    const response = await yelp.get('/search', {
-      params: {
-        term: search,
-        limit: 50,
-        location: 'New York',
-      },
-    });
-    setResults(response.data.businesses);
+    try {
+      const response = await yelp.get('/search', {
+        params: {
+          term: search,
+          limit: 50,
+          location: 'New York',
+        },
+      });
+      setResults(response.data.businesses);
+      
+    } catch (error) {
+      setErrorMessage('Something went wrong!')
+    }
   };
   return (
     <View>
@@ -23,7 +29,7 @@ const SearchScreen = () => {
         onSearchChange={(newSearch) => setSearch(newSearch)}
         onSearchSubmit={() => searchApi()}
       />
-      <Text>Search Screen</Text>
+      {errorMessage && <Text>{errorMessage}</Text>}
       <Text>We have found {results.length} results</Text>
     </View>
   );
