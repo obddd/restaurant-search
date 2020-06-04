@@ -7,6 +7,12 @@ import ResultList from '../components/ResultList';
 const SearchScreen = () => {
   const [search, setSearch] = useState('');
   const [results, errorMessage, searchApi] = useResult();
+
+  const filterResultsByPrice = (price) => {
+    return results.filter( result => {
+      return result.price === price;
+    })
+  };
   
   return (
     <View>
@@ -17,9 +23,9 @@ const SearchScreen = () => {
       />
       {errorMessage ? <Text>{errorMessage}</Text> : null}
       <Text>We have found {results.length} results</Text>
-      <ResultList title='Cost Effective' />
-      <ResultList title='Bit Pricier' />
-      <ResultList title='Big Spender' />
+      <ResultList results={filterResultsByPrice('$')} title='Cost Effective' />
+      <ResultList results={filterResultsByPrice('$$')} title='Bit Pricier' />
+      <ResultList results={filterResultsByPrice('$$$')} title='Big Spender' />
     </View>
   );
 };
