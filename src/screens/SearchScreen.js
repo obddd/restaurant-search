@@ -4,31 +4,42 @@ import SearchBar from '../components/SearchBar';
 import useResult from '../hooks/useResults';
 import ResultList from '../components/ResultList';
 
-const SearchScreen = () => {
+const SearchScreen = ({ navigation }) => {
   const [search, setSearch] = useState('');
   const [results, errorMessage, searchApi] = useResult();
 
   const filterResultsByPrice = (price) => {
-    return results.filter( result => {
+    return results.filter((result) => {
       return result.price === price;
-    })
+    });
   };
-  
   return (
-    <View style={{flex: 1}}>
+    <>
+      {/* <> is alternative to flex: 1 but best solution*/}
       <SearchBar
         search={search}
         onSearchChange={(newSearch) => setSearch(newSearch)}
         onSearchSubmit={() => searchApi(search)}
       />
       {errorMessage ? <Text>{errorMessage}</Text> : null}
-      <Text>We have found {results.length} results</Text>
       <ScrollView>
-      <ResultList results={filterResultsByPrice('$')} title='Cost Effective' />
-      <ResultList results={filterResultsByPrice('$$')} title='Bit Pricier' />
-      <ResultList results={filterResultsByPrice('$$$')} title='Big Spender' />
+        <ResultList
+          navigation={navigation}
+          results={filterResultsByPrice('$')}
+          title="Cost Effective"
+        />
+        <ResultList
+          navigation={navigation}
+          results={filterResultsByPrice('$$')}
+          title="Bit Pricier"
+        />
+        <ResultList
+          navigation={navigation}
+          results={filterResultsByPrice('$$$')}
+          title="Big Spender"
+        />
       </ScrollView>
-    </View>
+    </>
   );
 };
 
